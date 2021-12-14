@@ -1,0 +1,176 @@
+Compiling your contracts...
+===========================
+✔ Fetching solc version list from solc-bin. Attempt #1
+> Compiling ./contracts/LootBoxRandomness.sol
+> Compiling ./contracts/Valiant.sol
+> Compiling ./contracts/ValiantAccessory.sol
+> Compiling ./contracts/ValiantAccessoryFactory.sol
+> Compiling ./contracts/ValiantAccessoryLootBox.sol
+> Compiling ./contracts/ValiantFactory.sol
+> Compiling ./contracts/ValiantLootBox.sol
+> Compiling ./contracts/test/TestForReentrancyAttack.sol
+✔ Fetching solc version list from solc-bin. Attempt #1
+> Artifacts written to /Users/andy/coding/erc-drop/build/contracts
+> Compiled successfully using:
+   - solc: 0.8.10+commit.fc410830.Emscripten.clang
+
+
+
+Migrations dry-run (simulation)
+===============================
+> Network name:    'rinkeby-fork'
+> Network id:      4
+> Block gas limit: 29999943 (0x1c9c347)
+
+
+2_deploy_contracts.js
+=====================
+
+   Deploying 'ValiantAccessory'
+   ----------------------------
+   > block number:        9815298
+   > block timestamp:     1639514849
+   > account:             0xBc5F6679c2aAa193d58D347bf44aC88B2c831794
+   > balance:             0.389752362179482052
+   > gas used:            2592103 (0x278d67)
+   > gas price:           2 gwei
+   > value sent:          0 ETH
+   > total cost:          0.005184206 ETH
+
+
+   Deploying 'LootBoxRandomness'
+   -----------------------------
+   > block number:        9815305
+   > block timestamp:     1639514879
+   > account:             0xBc5F6679c2aAa193d58D347bf44aC88B2c831794
+   > balance:             0.388216380179482052
+   > gas used:            486417 (0x76c11)
+   > gas price:           2 gwei
+   > value sent:          0 ETH
+   > total cost:          0.000972834 ETH
+
+
+   Linking
+   -------
+   * Contract: ValiantAccessoryLootBox <--> Library: LootBoxRandomness 
+
+   Deploying 'ValiantAccessoryLootBox'
+   -----------------------------------
+   > block number:        9815306
+   > block timestamp:     1639514899
+   > account:             0xBc5F6679c2aAa193d58D347bf44aC88B2c831794
+   > balance:             0.381342622179482052
+   > gas used:            3436879 (0x34714f)
+   > gas price:           2 gwei
+   > value sent:          0 ETH
+   > total cost:          0.006873758 ETH
+
+
+   Deploying 'ValiantAccessoryFactory'
+   -----------------------------------
+   > block number:        9815307
+   > block timestamp:     1639514919
+   > account:             0xBc5F6679c2aAa193d58D347bf44aC88B2c831794
+   > balance:             0.379332496179482052
+   > gas used:            1005063 (0xf5607)
+   > gas price:           2 gwei
+   > value sent:          0 ETH
+   > total cost:          0.002010126 ETH
+
+   -------------------------------------
+   > Total cost:         0.015040924 ETH
+
+
+Summary
+=======
+> Total deployments:   4
+> Final cost:          0.015040924 ETH
+
+
+
+
+
+Starting migrations...
+======================
+> Network name:    'rinkeby'
+> Network id:      4
+> Block gas limit: 30000000 (0x1c9c380)
+
+
+2_deploy_contracts.js
+=====================
+
+   Deploying 'ValiantAccessory'
+   ----------------------------
+   > transaction hash:    0xa696594f79317db2b22211f402e6300aa0f927e008abf68ca8f405a2a588bd9e
+   > Blocks: 0            Seconds: 12
+   > contract address:    0x2B52fFd2dA05707a682A01AEFA20929FE2a91B04
+   > block number:        9815307
+   > block timestamp:     1639514980
+   > account:             0xBc5F6679c2aAa193d58D347bf44aC88B2c831794
+   > balance:             0.339896748179482052
+   > gas used:            2751991 (0x29fdf7)
+   > gas price:           20 gwei
+   > value sent:          0 ETH
+   > total cost:          0.05503982 ETH
+
+
+   Deploying 'LootBoxRandomness'
+   -----------------------------
+   > transaction hash:    0xee9e4f60ea8296f6833f8bb376fece9d99b343d13b33f29f1e8365aacc6b32fe
+   > Blocks: 1            Seconds: 12
+   > contract address:    0x067b7f9fe991F69cAF69eF4ad1efD0732C82A993
+   > block number:        9815314
+   > block timestamp:     1639515085
+   > account:             0xBc5F6679c2aAa193d58D347bf44aC88B2c831794
+   > balance:             0.318572928179482052
+   > gas used:            486417 (0x76c11)
+   > gas price:           20 gwei
+   > value sent:          0 ETH
+   > total cost:          0.00972834 ETH
+
+
+   Linking
+   -------
+   * Contract: ValiantAccessoryLootBox <--> Library: LootBoxRandomness (at address: 0x067b7f9fe991F69cAF69eF4ad1efD0732C82A993)
+
+   Deploying 'ValiantAccessoryLootBox'
+   -----------------------------------
+   > transaction hash:    0xc171a2ddfea9d4fccbea5202527365ddd270eabaae0d098cee1dcc9f61f45407
+   > Blocks: 1            Seconds: 12
+   > contract address:    0x121455381932792b5aCc54ACeF0725f6e5096F79
+   > block number:        9815315
+   > block timestamp:     1639515100
+   > account:             0xBc5F6679c2aAa193d58D347bf44aC88B2c831794
+   > balance:             0.246407588179482052
+   > gas used:            3608267 (0x370ecb)
+   > gas price:           20 gwei
+   > value sent:          0 ETH
+   > total cost:          0.07216534 ETH
+
+
+   Deploying 'ValiantAccessoryFactory'
+   -----------------------------------
+   > transaction hash:    0x45133d9ecca949567e4bedbd724bd661d3f62a9d8060d4b8fc689317c47b6097
+   > Blocks: 0            Seconds: 8
+   > contract address:    0x5ACe150F15e95b67Ed4870Ee972dDC6860b290e6
+   > block number:        9815316
+   > block timestamp:     1639515115
+   > account:             0xBc5F6679c2aAa193d58D347bf44aC88B2c831794
+   > balance:             0.224660568179482052
+   > gas used:            1087351 (0x109777)
+   > gas price:           20 gwei
+   > value sent:          0 ETH
+   > total cost:          0.02174702 ETH
+
+
+   > Saving migration to chain.
+   > Saving artifacts
+   -------------------------------------
+   > Total cost:          0.15868052 ETH
+
+
+Summary
+=======
+> Total deployments:   4
+> Final cost:          0.15868052 ETH
