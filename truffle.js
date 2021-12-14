@@ -40,6 +40,7 @@ module.exports = {
         });
       },
       gas: 10000000,
+      gasPrice: 5000000000,
       network_id: 4,
     },
     live: {

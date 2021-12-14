@@ -14,13 +14,13 @@ const setupValiantAccessories = require("../lib/setupValiantAccessories.js");
 
 // If you want to hardcode what deploys, comment out process.env.X and use
 // true/false;
-const DEPLOY_ALL = process.env.DEPLOY_ALL;
-const DEPLOY_ACCESSORIES_SALE = process.env.DEPLOY_ACCESSORIES_SALE || DEPLOY_ALL;
-const DEPLOY_ACCESSORIES = process.env.DEPLOY_ACCESSORIES || DEPLOY_ACCESSORIES_SALE || DEPLOY_ALL;
-const DEPLOY_VALIANTS_SALE = process.env.DEPLOY_VALIANTS_SALE || DEPLOY_ALL;
+const DEPLOY_ALL = true;
+const DEPLOY_ACCESSORIES_SALE = false;
+const DEPLOY_ACCESSORIES = false;
+const DEPLOY_VALIANTS_SALE = true;
 // Note that we will default to this unless DEPLOY_ACCESSORIES is set.
 // This is to keep the historical behavior of this migration.
-const DEPLOY_VALIANTS = process.env.DEPLOY_VALIANTS || DEPLOY_VALIANTS_SALE || DEPLOY_ALL || (! DEPLOY_ACCESSORIES);
+const DEPLOY_VALIANTS = true;
 
 module.exports = async (deployer, network, addresses) => {
   // OpenSea proxy registry addresses for rinkeby and mainnet.
