@@ -39,7 +39,7 @@ module.exports = {
           providerOrUrl: rinkebyNodeUrl,
         });
       },
-      gas: 5000000,
+      gas: 10000000,
       network_id: 4,
     },
     live: {
