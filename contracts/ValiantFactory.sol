@@ -5,10 +5,10 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "./IFactoryERC721.sol";
-import "./Creature.sol";
-import "./CreatureLootBox.sol";
+import "./Valiant.sol";
+import "./ValiantLootBox.sol";
 
-contract CreatureFactory is FactoryERC721, Ownable {
+contract ValiantFactory is FactoryERC721, Ownable {
     using Strings for string;
 
     event Transfer(
@@ -20,34 +20,34 @@ contract CreatureFactory is FactoryERC721, Ownable {
     address public proxyRegistryAddress;
     address public nftAddress;
     address public lootBoxNftAddress;
-    string public baseURI = "https://creatures-api.opensea.io/api/factory/";
+    string public baseURI = "https://valiants-api.opensea.io/api/factory/";
 
     /*
-     * Enforce the existence of only 100 OpenSea creatures.
+     * Enforce the existence of only 100 OpenSea valiants.
      */
-    uint256 CREATURE_SUPPLY = 100;
+    uint256 VALIANT_SUPPLY = 100;
 
     /*
-     * Three different options for minting Creatures (basic, premium, and gold).
+     * Three different options for minting Valiants (basic, premium, and gold).
      */
     uint256 NUM_OPTIONS = 3;
-    uint256 SINGLE_CREATURE_OPTION = 0;
-    uint256 MULTIPLE_CREATURE_OPTION = 1;
+    uint256 SINGLE_VALIANT_OPTION = 0;
+    uint256 MULTIPLE_VALIANT_OPTION = 1;
     uint256 LOOTBOX_OPTION = 2;
-    uint256 NUM_CREATURES_IN_MULTIPLE_CREATURE_OPTION = 4;
+    uint256 NUM_VALIANTS_IN_MULTIPLE_VALIANT_OPTION = 4;
 
     constructor(address _proxyRegistryAddress, address _nftAddress) {
         proxyRegistryAddress = _proxyRegistryAddress;
         nftAddress = _nftAddress;
         lootBoxNftAddress = address(
-            new CreatureLootBox(_proxyRegistryAddress, address(this))
+            new ValiantLootBox(_proxyRegistryAddress, address(this))
         );
 
         fireTransferEvents(address(0), owner());
     }
 
     function name() override external pure returns (string memory) {
-        return "OpenSeaCreature Item Sale";
+        return "OpenSeaValiant Item Sale";
     }
 
     function symbol() override external pure returns (string memory) {
@@ -84,22 +84,22 @@ contract CreatureFactory is FactoryERC721, Ownable {
         );
         require(canMint(_optionId));
 
-        Creature openSeaCreature = Creature(nftAddress);
-        if (_optionId == SINGLE_CREATURE_OPTION) {
-            openSeaCreature.mintTo(_toAddress);
-        } else if (_optionId == MULTIPLE_CREATURE_OPTION) {
+        Valiant openSeaValiant = Valiant(nftAddress);
+        if (_optionId == SINGLE_VALIANT_OPTION) {
+            openSeaValiant.mintTo(_toAddress);
+        } else if (_optionId == MULTIPLE_VALIANT_OPTION) {
             for (
                 uint256 i = 0;
-                i < NUM_CREATURES_IN_MULTIPLE_CREATURE_OPTION;
+                i < NUM_VALIANTS_IN_MULTIPLE_VALIANT_OPTION;
                 i++
             ) {
-                openSeaCreature.mintTo(_toAddress);
+                openSeaValiant.mintTo(_toAddress);
             }
         } else if (_optionId == LOOTBOX_OPTION) {
-            CreatureLootBox openSeaCreatureLootBox = CreatureLootBox(
+            ValiantLootBox openSeaValiantLootBox = ValiantLootBox(
                 lootBoxNftAddress
             );
-            openSeaCreatureLootBox.mintTo(_toAddress);
+            openSeaValiantLootBox.mintTo(_toAddress);
         }
     }
 
@@ -108,21 +108,21 @@ contract CreatureFactory is FactoryERC721, Ownable {
             return false;
         }
 
-        Creature openSeaCreature = Creature(nftAddress);
-        uint256 creatureSupply = openSeaCreature.totalSupply();
+        Valiant openSeaValiant = Valiant(nftAddress);
+        uint256 valiantSupply = openSeaValiant.totalSupply();
 
         uint256 numItemsAllocated = 0;
-        if (_optionId == SINGLE_CREATURE_OPTION) {
+        if (_optionId == SINGLE_VALIANT_OPTION) {
             numItemsAllocated = 1;
-        } else if (_optionId == MULTIPLE_CREATURE_OPTION) {
-            numItemsAllocated = NUM_CREATURES_IN_MULTIPLE_CREATURE_OPTION;
+        } else if (_optionId == MULTIPLE_VALIANT_OPTION) {
+            numItemsAllocated = NUM_VALIANTS_IN_MULTIPLE_VALIANT_OPTION;
         } else if (_optionId == LOOTBOX_OPTION) {
-            CreatureLootBox openSeaCreatureLootBox = CreatureLootBox(
+            ValiantLootBox openSeaValiantLootBox = ValiantLootBox(
                 lootBoxNftAddress
             );
-            numItemsAllocated = openSeaCreatureLootBox.itemsPerLootbox();
+            numItemsAllocated = openSeaValiantLootBox.itemsPerLootbox();
         }
-        return creatureSupply < (CREATURE_SUPPLY - numItemsAllocated);
+        return valiantSupply < (VALIANT_SUPPLY - numItemsAllocated);
     }
 
     function tokenURI(uint256 _optionId) override external view returns (string memory) {

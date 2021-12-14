@@ -2,7 +2,7 @@
 
 const truffleAssert = require('truffle-assertions');
 
-const setup = require('../lib/setupCreatureAccessories.js');
+const setup = require('../lib/setupValiantAccessories.js');
 const testVals = require('../lib/testValuesCommon.js');
 const vals = require('../lib/valuesCommon.js');
 
@@ -14,10 +14,10 @@ const MockProxyRegistry = artifacts.require(
 const LootBoxRandomness = artifacts.require(
   "../contracts/LootBoxRandomness.sol"
 );
-const CreatureAccessory = artifacts.require("../contracts/CreatureAccessory.sol");
-const CreatureAccessoryFactory = artifacts.require("../contracts/CreatureAccessoryFactory.sol");
-const CreatureAccessoryLootBox = artifacts.require(
-  "../contracts/CreatureAccessoryLootBox.sol"
+const ValiantAccessory = artifacts.require("../contracts/ValiantAccessory.sol");
+const ValiantAccessoryFactory = artifacts.require("../contracts/ValiantAccessoryFactory.sol");
+const ValiantAccessoryLootBox = artifacts.require(
+  "../contracts/ValiantAccessoryLootBox.sol"
 );
 
 
@@ -103,7 +103,7 @@ const compareTokenTotals = (totals, spec, option) => {
 
 /* Tests */
 
-contract("CreatureAccessoryLootBox", (accounts) => {
+contract("ValiantAccessoryLootBox", (accounts) => {
   const owner = accounts[0];
   const userA = accounts[1];
   const userB = accounts[2];
@@ -111,30 +111,30 @@ contract("CreatureAccessoryLootBox", (accounts) => {
 
   let lootBox;
   let factory;
-  let creatureAccessory;
+  let valiantAccessory;
   let proxy;
 
   before(async () => {
     proxy = await MockProxyRegistry.new();
     await proxy.setProxy(owner, proxyForOwner);
-    creatureAccessory = await CreatureAccessory.new(proxy.address);
-    CreatureAccessoryLootBox.link(LootBoxRandomness);
-    lootBox = await CreatureAccessoryLootBox.new(
+    valiantAccessory = await ValiantAccessory.new(proxy.address);
+    ValiantAccessoryLootBox.link(LootBoxRandomness);
+    lootBox = await ValiantAccessoryLootBox.new(
       proxy.address,
       { gas: 6721975 }
     );
-    factory = await CreatureAccessoryFactory.new(
+    factory = await ValiantAccessoryFactory.new(
       proxy.address,
-      creatureAccessory.address,
+      valiantAccessory.address,
       lootBox.address
     );
-    await setup.setupAccessory(creatureAccessory, owner);
-    await creatureAccessory.setApprovalForAll(
+    await setup.setupAccessory(valiantAccessory, owner);
+    await valiantAccessory.setApprovalForAll(
       factory.address,
       true,
       { from: owner }
     );
-    await creatureAccessory.transferOwnership(factory.address);
+    await valiantAccessory.transferOwnership(factory.address);
     await setup.setupAccessoryLootBox(lootBox, factory);
   });
 

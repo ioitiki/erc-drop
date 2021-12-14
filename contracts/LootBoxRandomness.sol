@@ -23,7 +23,7 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
     uses methods that set, reset, or open anything in onlyOwner().
     Code that calls _mint should also be wrapped in nonReentrant() and should
     ensure perform the equivalent checks to _canMint() in
-    CreatureAccessoryFactory.
+    ValiantAccessoryFactory.
  */
 
 
@@ -45,7 +45,7 @@ library LootBoxRandomness {
   event Warning(string message, address account);
 
   uint256 constant INVERSE_BASIS_POINT = 10000;
-  
+
   // NOTE: Price of the lootbox is set via sell orders on OpenSea
   struct OptionSettings {
     // Number of items to send per open.
@@ -87,7 +87,7 @@ library LootBoxRandomness {
       _state.numClasses = _numClasses;
       _state.seed = _seed;
   }
-  
+
   /**
    * @dev If the tokens for some class are pre-minted and owned by the
    * contract owner, they can be used for a given class by setting them here
@@ -197,8 +197,8 @@ library LootBoxRandomness {
 
   /**
    * @dev Main minting logic for lootboxes
-   * This is called via safeTransferFrom when CreatureAccessoryLootBox extends
-   * CreatureAccessoryFactory.
+   * This is called via safeTransferFrom when ValiantAccessoryLootBox extends
+   * ValiantAccessoryFactory.
    * NOTE: prices and fees are determined by the sell order on OpenSea.
    * WARNING: Make sure msg.sender can mint!
    */

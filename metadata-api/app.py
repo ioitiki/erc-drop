@@ -16,7 +16,7 @@ app = Flask(__name__)
 # Data
 ########################################################################
 
-# opensea-creatures
+# opensea-valiants
 
 FIRST_NAMES = ['Herbie', 'Sprinkles', 'Boris', 'Dave', 'Randy', 'Captain']
 LAST_NAMES = ['Starbelly', 'Fisherton', 'McCoy']
@@ -38,7 +38,7 @@ PERCENT_BOOST_ATTRIBUTES = [5, 10, 15]
 NUMBER_ATTRIBUTES = [1, 2, 1, 1]
 
 
-# opensea-creatures-accessories
+# opensea-valiants-accessories
 
 ACCESSORIES_IMAGES = [
     'Bamboo-flute.png',
@@ -75,15 +75,15 @@ ACCESSORIES_ATTS_GENERATION = [1, 1, 2, 1, 1, 3]
 # contractURI() support
 
 CONTRACT_URI_METADATA = {
-    'opensea-creatures': {
-        'name': 'OpenSea Creatures',
-        'description': 'Friendly creatures of the sea.',
+    'opensea-valiants': {
+        'name': 'OpenSea Valiants',
+        'description': 'Friendly valiants of the sea.',
         'image': 'https://example.com/image.png',
-        'external_link': 'https://github.com/ProjectOpenSea/opensea-creatures/'
+        'external_link': 'https://github.com/ProjectOpenSea/opensea-valiants/'
     },
     'opensea-erc1155': {
-        'name': 'OpenSea Creature Accessories',
-        'description': "Fun and useful accessories for your OpenSea creatures.",
+        'name': 'OpenSea Valiant Accessories',
+        'description': "Fun and useful accessories for your OpenSea valiants.",
         'image': 'https://example.com/image.png',
         'external_link': 'https://github.com/ProjectOpenSea/opensea-erc1155/'
     }
@@ -95,14 +95,14 @@ CONTRACT_URI_METADATA_AVAILABLE = CONTRACT_URI_METADATA.keys()
 # Routes
 ########################################################################
 
-# opensea-creatures
+# opensea-valiants
 
-@app.route('/api/creature/<token_id>')
-def creature(token_id):
+@app.route('/api/valiant/<token_id>')
+def valiant(token_id):
     token_id = int(token_id)
     num_first_names = len(FIRST_NAMES)
     num_last_names = len(LAST_NAMES)
-    creature_name = '%s %s' % (FIRST_NAMES[token_id % num_first_names], LAST_NAMES[token_id % num_last_names])
+    valiant_name = '%s %s' % (FIRST_NAMES[token_id % num_first_names], LAST_NAMES[token_id % num_last_names])
 
     base = BASES[token_id % len(BASES)]
     eyes = EYES[token_id % len(EYES)]
@@ -125,16 +125,16 @@ def creature(token_id):
 
 
     return jsonify({
-        'name': creature_name,
-        'description': 'Friendly OpenSea Creature that enjoys long swims in the ocean.',
+        'name': valiant_name,
+        'description': 'Friendly OpenSea Valiant that enjoys long swims in the ocean.',
         'image': image_url,
-        'external_url': 'https://openseacreatures.io/%s' % token_id,
+        'external_url': 'https://openseavaliants.io/%s' % token_id,
         'attributes': attributes
     })
 
 
-@app.route('/api/box/creature/<token_id>')
-def creature_box(token_id):
+@app.route('/api/box/valiant/<token_id>')
+def valiant_box(token_id):
     token_id = int(token_id)
     image_url = _compose_image(['images/box/lootbox.png'], token_id, 'box')
 
@@ -142,33 +142,33 @@ def creature_box(token_id):
     _add_attribute(attributes, 'number_inside', [3], token_id)
 
     return jsonify({
-        'name': 'Creature Loot Box',
-        'description': 'This lootbox contains some OpenSea Creatures! It can also be traded!',
+        'name': 'Valiant Loot Box',
+        'description': 'This lootbox contains some OpenSea Valiants! It can also be traded!',
         'image': image_url,
-        'external_url': 'https://openseacreatures.io/%s' % token_id,
+        'external_url': 'https://openseavaliants.io/%s' % token_id,
         'attributes': attributes
     })
 
 
-@app.route('/api/factory/creature/<token_id>')
-def creature_factory(token_id):
+@app.route('/api/factory/valiant/<token_id>')
+def valiant_factory(token_id):
     token_id = int(token_id)
     if token_id == 0:
-        name = 'One OpenSea creature'
-        description = 'When you purchase this option, you will receive a single OpenSea creature of a random variety. ' \
+        name = 'One OpenSea valiant'
+        description = 'When you purchase this option, you will receive a single OpenSea valiant of a random variety. ' \
                       'Enjoy and take good care of your aquatic being!'
         image_url = _compose_image(['images/factory/egg.png'], token_id, 'factory')
         num_inside = 1
     elif token_id == 1:
-        name = 'Four OpenSea creatures'
-        description = 'When you purchase this option, you will receive four OpenSea creatures of random variety. ' \
+        name = 'Four OpenSea valiants'
+        description = 'When you purchase this option, you will receive four OpenSea valiants of random variety. ' \
                       'Enjoy and take good care of your aquatic beings!'
         image_url = _compose_image(['images/factory/four-eggs.png'], token_id, 'factory')
         num_inside = 4
     elif token_id == 2:
-        name = 'One OpenSea creature lootbox'
+        name = 'One OpenSea valiant lootbox'
         description = 'When you purchase this option, you will receive one lootbox, which can be opened to reveal three ' \
-                      'OpenSea creatures of random variety. Enjoy and take good care of these cute aquatic beings!'
+                      'OpenSea valiants of random variety. Enjoy and take good care of these cute aquatic beings!'
         image_url = _compose_image(['images/box/lootbox.png'], token_id, 'factory')
         num_inside = 3
 
@@ -179,12 +179,12 @@ def creature_factory(token_id):
         'name': name,
         'description': description,
         'image': image_url,
-        'external_url': 'https://openseacreatures.io/%s' % token_id,
+        'external_url': 'https://openseavaliants.io/%s' % token_id,
         'attributes': attributes
     })
 
 
-# opensea-creatures-accessories
+# opensea-valiants-accessories
 
 @app.route('/api/accessory/<token_id>')
 def accessory(token_id):
@@ -205,9 +205,9 @@ def accessory(token_id):
 
     return jsonify({
         'name': accessory_name,
-        'description': 'A fun and useful accessory for your friendly OpenSea creatures.',
+        'description': 'A fun and useful accessory for your friendly OpenSea valiants.',
         'image': image_url,
-        'external_url': 'https://openseacreatures.io/accessory/%s' % token_id,
+        'external_url': 'https://openseavaliants.io/accessory/%s' % token_id,
         'attributes': attributes
     })
 
@@ -222,9 +222,9 @@ def accessory_box(token_id):
 
     return jsonify({
         'name': 'Accessory Loot Box',
-        'description': 'This lootbox contains some OpenSea Creature accessories! It can also be traded!',
+        'description': 'This lootbox contains some OpenSea Valiant accessories! It can also be traded!',
         'image': image_url,
-        'external_url': 'https://openseacreatures.io/box/accessory/%s' % token_id,
+        'external_url': 'https://openseavaliants.io/box/accessory/%s' % token_id,
         'attributes': attributes
     })
 
@@ -233,21 +233,21 @@ def accessory_box(token_id):
 def accessory_factory(token_id):
     token_id = int(token_id)
     if token_id == 0:
-        name = 'One OpenSea creature accessory'
-        description = 'When you purchase this option, you will receive a single OpenSea creature accessory of a random variety. ' \
+        name = 'One OpenSea valiant accessory'
+        description = 'When you purchase this option, you will receive a single OpenSea valiant accessory of a random variety. ' \
                       'Enjoy and take good care of your aquatic being!'
         image_url = _compose_image(['images/factory/egg.png'], token_id, 'factory')
         num_inside = 1
     elif token_id == 1:
-        name = 'Four OpenSea creature accessories'
-        description = 'When you purchase this option, you will receive four OpenSea creature accessories of random variety. ' \
+        name = 'Four OpenSea valiant accessories'
+        description = 'When you purchase this option, you will receive four OpenSea valiant accessories of random variety. ' \
                       'Enjoy and take good care of your aquatic beings!'
         image_url = _compose_image(['images/factory/four-eggs.png'], token_id, 'factory')
         num_inside = 4
     elif token_id == 2:
-        name = 'One OpenSea creature accessory lootbox'
+        name = 'One OpenSea valiant accessory lootbox'
         description = 'When you purchase this option, you will receive one lootbox, which can be opened to reveal three ' \
-                      'OpenSea creature accessories of random variety. Enjoy and take good care of these cute aquatic beings!'
+                      'OpenSea valiant accessories of random variety. Enjoy and take good care of these cute aquatic beings!'
         image_url = _compose_image(['images/box/lootbox.png'], token_id, 'factory')
         num_inside = 3
 
@@ -258,7 +258,7 @@ def accessory_factory(token_id):
         'name': name,
         'description': description,
         'image': image_url,
-        'external_url': 'https://openseacreatures.io/%s' % token_id,
+        'external_url': 'https://openseavaliants.io/%s' % token_id,
         'attributes': attributes
     })
 
@@ -293,7 +293,7 @@ def _add_attribute(existing, attribute_name, options, token_id, display_type=Non
     existing.append(trait)
 
 
-def _compose_image(image_files, token_id, path='creature'):
+def _compose_image(image_files, token_id, path='valiant'):
     composite = None
     for image_file in image_files:
         foreground = Image.open(image_file).convert('RGBA')

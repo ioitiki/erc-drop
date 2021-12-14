@@ -1,6 +1,7 @@
-const HDWalletProvider = require("truffle-hdwallet-provider");
+const HDWalletProvider = require("@truffle/hdwallet-provider");
 
 const MNEMONIC = process.env.MNEMONIC;
+const OWNER_PRIVATE_KEY = process.env.OWNER_PRIVATE_KEY;
 const NODE_API_KEY = process.env.INFURA_KEY || process.env.ALCHEMY_KEY;
 const isInfura = !!process.env.INFURA_KEY;
 
@@ -9,8 +10,8 @@ const needsNodeAPI =
   (process.env.npm_config_argv.includes("rinkeby") ||
     process.env.npm_config_argv.includes("live"));
 
-if ((!MNEMONIC || !NODE_API_KEY) && needsNodeAPI) {
-  console.error("Please set a mnemonic and ALCHEMY_KEY or INFURA_KEY.");
+if ((!OWNER_PRIVATE_KEY || !NODE_API_KEY) && needsNodeAPI) {
+  console.error("Please set a owner private key and ALCHEMY_KEY or INFURA_KEY.");
   process.exit(0);
 }
 
@@ -32,7 +33,11 @@ module.exports = {
     },
     rinkeby: {
       provider: function () {
-        return new HDWalletProvider(MNEMONIC, rinkebyNodeUrl);
+        return new HDWalletProvider({
+          privateKeys: [OWNER_PRIVATE_KEY],
+          numberOfAddresses: 1,
+          providerOrUrl: rinkebyNodeUrl,
+        });
       },
       gas: 5000000,
       network_id: 4,

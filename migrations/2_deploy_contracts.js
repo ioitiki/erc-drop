@@ -1,26 +1,26 @@
-const Creature = artifacts.require("./Creature.sol");
-const CreatureFactory = artifacts.require("./CreatureFactory.sol");
-const CreatureLootBox = artifacts.require("./CreatureLootBox.sol");
-const CreatureAccessory = artifacts.require("../contracts/CreatureAccessory.sol");
-const CreatureAccessoryFactory = artifacts.require("../contracts/CreatureAccessoryFactory.sol");
-const CreatureAccessoryLootBox = artifacts.require(
-  "../contracts/CreatureAccessoryLootBox.sol"
+const Valiant = artifacts.require("./Valiant.sol");
+const ValiantFactory = artifacts.require("./ValiantFactory.sol");
+const ValiantLootBox = artifacts.require("./ValiantLootBox.sol");
+const ValiantAccessory = artifacts.require("../contracts/ValiantAccessory.sol");
+const ValiantAccessoryFactory = artifacts.require("../contracts/ValiantAccessoryFactory.sol");
+const ValiantAccessoryLootBox = artifacts.require(
+  "../contracts/ValiantAccessoryLootBox.sol"
 );
 const LootBoxRandomness = artifacts.require(
   "../contracts/LootBoxRandomness.sol"
 );
 
-const setupCreatureAccessories = require("../lib/setupCreatureAccessories.js");
+const setupValiantAccessories = require("../lib/setupValiantAccessories.js");
 
 // If you want to hardcode what deploys, comment out process.env.X and use
 // true/false;
 const DEPLOY_ALL = process.env.DEPLOY_ALL;
 const DEPLOY_ACCESSORIES_SALE = process.env.DEPLOY_ACCESSORIES_SALE || DEPLOY_ALL;
 const DEPLOY_ACCESSORIES = process.env.DEPLOY_ACCESSORIES || DEPLOY_ACCESSORIES_SALE || DEPLOY_ALL;
-const DEPLOY_CREATURES_SALE = process.env.DEPLOY_CREATURES_SALE || DEPLOY_ALL;
+const DEPLOY_VALIANTS_SALE = process.env.DEPLOY_VALIANTS_SALE || DEPLOY_ALL;
 // Note that we will default to this unless DEPLOY_ACCESSORIES is set.
 // This is to keep the historical behavior of this migration.
-const DEPLOY_CREATURES = process.env.DEPLOY_CREATURES || DEPLOY_CREATURES_SALE || DEPLOY_ALL || (! DEPLOY_ACCESSORIES);
+const DEPLOY_VALIANTS = process.env.DEPLOY_VALIANTS || DEPLOY_VALIANTS_SALE || DEPLOY_ALL || (! DEPLOY_ACCESSORIES);
 
 module.exports = async (deployer, network, addresses) => {
   // OpenSea proxy registry addresses for rinkeby and mainnet.
@@ -31,24 +31,24 @@ module.exports = async (deployer, network, addresses) => {
     proxyRegistryAddress = "0xa5409ec958c83c3f309868babaca7c86dcb077c1";
   }
 
-  if (DEPLOY_CREATURES) {
-    await deployer.deploy(Creature, proxyRegistryAddress, {gas: 5000000});
+  if (DEPLOY_VALIANTS) {
+    await deployer.deploy(Valiant, proxyRegistryAddress, {gas: 5000000});
   }
 
-  if (DEPLOY_CREATURES_SALE) {
-    await deployer.deploy(CreatureFactory, proxyRegistryAddress, Creature.address, {gas: 7000000});
-    const creature = await Creature.deployed();
-    await creature.transferOwnership(CreatureFactory.address);
+  if (DEPLOY_VALIANTS_SALE) {
+    await deployer.deploy(ValiantFactory, proxyRegistryAddress, Valiant.address, {gas: 7000000});
+    const valiant = await Valiant.deployed();
+    await valiant.transferOwnership(ValiantFactory.address);
   }
 
   if (DEPLOY_ACCESSORIES) {
     await deployer.deploy(
-      CreatureAccessory,
+      ValiantAccessory,
       proxyRegistryAddress,
       { gas: 5000000 }
     );
-    const accessories = await CreatureAccessory.deployed();
-    await setupCreatureAccessories.setupAccessory(
+    const accessories = await ValiantAccessory.deployed();
+    await setupValiantAccessories.setupAccessory(
       accessories,
       addresses[0]
     );
@@ -56,26 +56,26 @@ module.exports = async (deployer, network, addresses) => {
 
   if (DEPLOY_ACCESSORIES_SALE) {
     await deployer.deploy(LootBoxRandomness);
-    await deployer.link(LootBoxRandomness, CreatureAccessoryLootBox);
+    await deployer.link(LootBoxRandomness, ValiantAccessoryLootBox);
     await deployer.deploy(
-      CreatureAccessoryLootBox,
+      ValiantAccessoryLootBox,
       proxyRegistryAddress,
       { gas: 6721975 }
     );
-    const lootBox = await CreatureAccessoryLootBox.deployed();
+    const lootBox = await ValiantAccessoryLootBox.deployed();
     await deployer.deploy(
-      CreatureAccessoryFactory,
+      ValiantAccessoryFactory,
       proxyRegistryAddress,
-      CreatureAccessory.address,
-      CreatureAccessoryLootBox.address,
+      ValiantAccessory.address,
+      ValiantAccessoryLootBox.address,
       { gas: 5000000 }
     );
-    const accessories = await CreatureAccessory.deployed();
-    const factory = await CreatureAccessoryFactory.deployed();
+    const accessories = await ValiantAccessory.deployed();
+    const factory = await ValiantAccessoryFactory.deployed();
     await accessories.transferOwnership(
-      CreatureAccessoryFactory.address
+      ValiantAccessoryFactory.address
     );
-    await setupCreatureAccessories.setupAccessoryLootBox(lootBox, factory);
+    await setupValiantAccessories.setupAccessoryLootBox(lootBox, factory);
     await lootBox.transferOwnership(factory.address);
   }
 };
