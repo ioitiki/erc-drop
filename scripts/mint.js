@@ -8,10 +8,11 @@ const FACTORY_CONTRACT_ADDRESS = process.env.FACTORY_CONTRACT_ADDRESS;
 const NFT_CONTRACT_ADDRESS = process.env.NFT_CONTRACT_ADDRESS;
 const OWNER_ADDRESS = process.env.OWNER_ADDRESS;
 const NETWORK = process.env.NETWORK;
-const NUM_VALIANTS = 12;
-const NUM_LOOTBOXES = 4;
+const NUM_VALIANTS = 1;
+const NUM_LOOTBOXES = 0;
 const DEFAULT_OPTION_ID = 0;
 const LOOTBOX_OPTION_ID = 2;
+const CONTRACT_JSON = require('../build/contracts/ValiantFactory.json')
 
 if (!OWNER_PRIVATE_KEY || !NODE_API_KEY || !OWNER_ADDRESS || !NETWORK) {
   console.error(
@@ -70,47 +71,62 @@ async function main() {
   });
   const web3Instance = new web3(provider);
 
-  if (FACTORY_CONTRACT_ADDRESS) {
-    const factoryContract = new web3Instance.eth.Contract(
-      FACTORY_ABI,
-      FACTORY_CONTRACT_ADDRESS,
-      { gasLimit: "1000000" }
-    );
+  const factoryContract = new web3Instance.eth.Contract(
+    CONTRACT_JSON.abi,
+    FACTORY_CONTRACT_ADDRESS,
+    { gasLimit: "1000000" }
+  );
 
-    // Valiants issued directly to the owner.
-    for (var i = 0; i < NUM_VALIANTS; i++) {
-      const result = await factoryContract.methods
-        .mint(DEFAULT_OPTION_ID, OWNER_ADDRESS)
-        .send({ from: OWNER_ADDRESS });
-      console.log("Minted valiant. Transaction: " + result.transactionHash);
-    }
+  const result = await factoryContract.methods
+    .tokenURI(100)
+    .call({ from: OWNER_ADDRESS });
 
-    // Lootboxes issued directly to the owner.
-    for (var i = 0; i < NUM_LOOTBOXES; i++) {
-      const result = await factoryContract.methods
-        .mint(LOOTBOX_OPTION_ID, OWNER_ADDRESS)
-        .send({ from: OWNER_ADDRESS });
-      console.log("Minted lootbox. Transaction: " + result.transactionHash);
-    }
-  } else if (NFT_CONTRACT_ADDRESS) {
-    const nftContract = new web3Instance.eth.Contract(
-      NFT_ABI,
-      NFT_CONTRACT_ADDRESS,
-      { gasLimit: "1000000" }
-    );
+  console.log(result)
 
-    // Valiants issued directly to the owner.
-    for (var i = 0; i < NUM_VALIANTS; i++) {
-      const result = await nftContract.methods
-        .mintTo(OWNER_ADDRESS)
-        .send({ from: OWNER_ADDRESS });
-      console.log("Minted valiant. Transaction: " + result.transactionHash);
-    }
-  } else {
-    console.error(
-      "Add NFT_CONTRACT_ADDRESS or FACTORY_CONTRACT_ADDRESS to the environment variables"
-    );
-  }
+
+
+
+  // if (FACTORY_CONTRACT_ADDRESS) {
+  //   const factoryContract = new web3Instance.eth.Contract(
+  //     FACTORY_ABI,
+  //     FACTORY_CONTRACT_ADDRESS,
+  //     { gasLimit: "1000000" }
+  //   );
+
+  //   // Valiants issued directly to the owner.
+  //   for (var i = 0; i < NUM_VALIANTS; i++) {
+  //     const result = await factoryContract.methods
+  //       .mint(DEFAULT_OPTION_ID, OWNER_ADDRESS)
+  //       .send({ from: OWNER_ADDRESS });
+  //     console.log("Minted valiant. Transaction: " + result.transactionHash);
+  //   }
+
+  //   // Lootboxes issued directly to the owner.
+  //   for (var i = 0; i < NUM_LOOTBOXES; i++) {
+  //     const result = await factoryContract.methods
+  //       .mint(LOOTBOX_OPTION_ID, OWNER_ADDRESS)
+  //       .send({ from: OWNER_ADDRESS });
+  //     console.log("Minted lootbox. Transaction: " + result.transactionHash);
+  //   }
+  // } else if (NFT_CONTRACT_ADDRESS) {
+  //   const nftContract = new web3Instance.eth.Contract(
+  //     NFT_ABI,
+  //     NFT_CONTRACT_ADDRESS,
+  //     { gasLimit: "1000000" }
+  //   );
+
+  //   // Valiants issued directly to the owner.
+  //   for (var i = 0; i < NUM_VALIANTS; i++) {
+  //     const result = await nftContract.methods
+  //       .mintTo(OWNER_ADDRESS)
+  //       .send({ from: OWNER_ADDRESS });
+  //     console.log("Minted valiant. Transaction: " + result.transactionHash);
+  //   }
+  // } else {
+  //   console.error(
+  //     "Add NFT_CONTRACT_ADDRESS or FACTORY_CONTRACT_ADDRESS to the environment variables"
+  //   );
+  // }
 }
 
 main();

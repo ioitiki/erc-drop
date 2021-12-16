@@ -6,7 +6,6 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "./IFactoryERC721.sol";
 import "./Valiant.sol";
-import "./ValiantLootBox.sol";
 
 contract ValiantFactory is FactoryERC721, Ownable {
     using Strings for string;
@@ -19,18 +18,17 @@ contract ValiantFactory is FactoryERC721, Ownable {
 
     address public proxyRegistryAddress;
     address public nftAddress;
-    address public lootBoxNftAddress;
-    string public baseURI = "https://valiants-api.opensea.io/api/factory/";
+    string public baseURI = "ipfs://QmWjaFNpZx2PbQJieci9mXhRcQCNgWhXFqdXw8Qkrysg3S/";
 
     /*
-     * Enforce the existence of only 100 OpenSea valiants.
+     * Enforce the existence of only 10000 OpenSea valiants.
      */
-    uint256 VALIANT_SUPPLY = 100;
+    uint256 VALIANT_SUPPLY = 10000;
 
     /*
      * Three different options for minting Valiants (basic, premium, and gold).
      */
-    uint256 NUM_OPTIONS = 3;
+    uint256 NUM_OPTIONS = 2;
     uint256 SINGLE_VALIANT_OPTION = 0;
     uint256 MULTIPLE_VALIANT_OPTION = 1;
     uint256 LOOTBOX_OPTION = 2;
@@ -39,19 +37,16 @@ contract ValiantFactory is FactoryERC721, Ownable {
     constructor(address _proxyRegistryAddress, address _nftAddress) {
         proxyRegistryAddress = _proxyRegistryAddress;
         nftAddress = _nftAddress;
-        lootBoxNftAddress = address(
-            new ValiantLootBox(_proxyRegistryAddress, address(this))
-        );
 
-        fireTransferEvents(address(0), owner());
+        // fireTransferEvents(address(0), owner());
     }
 
     function name() override external pure returns (string memory) {
-        return "OpenSeaValiant Item Sale";
+        return "Valiant8";
     }
 
     function symbol() override external pure returns (string memory) {
-        return "CPF";
+        return "BLT";
     }
 
     function supportsFactoryInterface() override public pure returns (bool) {
@@ -79,8 +74,7 @@ contract ValiantFactory is FactoryERC721, Ownable {
         ProxyRegistry proxyRegistry = ProxyRegistry(proxyRegistryAddress);
         assert(
             address(proxyRegistry.proxies(owner())) == _msgSender() ||
-                owner() == _msgSender() ||
-                _msgSender() == lootBoxNftAddress
+                owner() == _msgSender()
         );
         require(canMint(_optionId));
 
@@ -95,19 +89,10 @@ contract ValiantFactory is FactoryERC721, Ownable {
             ) {
                 openSeaValiant.mintTo(_toAddress);
             }
-        } else if (_optionId == LOOTBOX_OPTION) {
-            ValiantLootBox openSeaValiantLootBox = ValiantLootBox(
-                lootBoxNftAddress
-            );
-            openSeaValiantLootBox.mintTo(_toAddress);
         }
     }
 
     function canMint(uint256 _optionId) override public view returns (bool) {
-        if (_optionId >= NUM_OPTIONS) {
-            return false;
-        }
-
         Valiant openSeaValiant = Valiant(nftAddress);
         uint256 valiantSupply = openSeaValiant.totalSupply();
 
@@ -116,17 +101,12 @@ contract ValiantFactory is FactoryERC721, Ownable {
             numItemsAllocated = 1;
         } else if (_optionId == MULTIPLE_VALIANT_OPTION) {
             numItemsAllocated = NUM_VALIANTS_IN_MULTIPLE_VALIANT_OPTION;
-        } else if (_optionId == LOOTBOX_OPTION) {
-            ValiantLootBox openSeaValiantLootBox = ValiantLootBox(
-                lootBoxNftAddress
-            );
-            numItemsAllocated = openSeaValiantLootBox.itemsPerLootbox();
         }
         return valiantSupply < (VALIANT_SUPPLY - numItemsAllocated);
     }
 
     function tokenURI(uint256 _optionId) override external view returns (string memory) {
-        return string(abi.encodePacked(baseURI, Strings.toString(_optionId)));
+        return string(abi.encodePacked(baseURI, Strings.toString(_optionId), ".json"));
     }
 
     /**

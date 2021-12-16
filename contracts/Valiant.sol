@@ -10,11 +10,11 @@ import "./ERC721Tradable.sol";
  */
 contract Valiant is ERC721Tradable {
     constructor(address _proxyRegistryAddress)
-        ERC721Tradable("Valiant", "OSC", _proxyRegistryAddress)
+        ERC721Tradable("Valiant8", "BLT", _proxyRegistryAddress)
     {}
 
     function baseTokenURI() override public pure returns (string memory) {
-        return "https://valiants-api.opensea.io/api/valiant/";
+        return "ipfs://QmWjaFNpZx2PbQJieci9mXhRcQCNgWhXFqdXw8Qkrysg3S/";
     }
 
     function contractURI() public pure returns (string memory) {
