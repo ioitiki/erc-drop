@@ -2,12 +2,13 @@
 
 pragma solidity ^0.8.0;
 
+import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "./IFactoryERC721.sol";
 import "./Valiant.sol";
 
-contract ValiantFactory is FactoryERC721, Ownable {
+contract ValiantFactory is FactoryERC721, Ownable, AccessControl {
     using Strings for string;
 
     event Transfer(
@@ -20,10 +21,15 @@ contract ValiantFactory is FactoryERC721, Ownable {
     address public nftAddress;
     string public baseURI = "ipfs://QmWjaFNpZx2PbQJieci9mXhRcQCNgWhXFqdXw8Qkrysg3S/";
 
+    bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
+    bytes32 public constant RECEIVING_ADDRESS = keccak256("RECEIVING_ADDRESS");
+
     /*
      * Enforce the existence of only 10000 OpenSea valiants.
      */
     uint256 VALIANT_SUPPLY = 10000;
+    uint SINGLE_VALIANT_COST = 10 * (10 ** 15);
+    uint MULTIPLE_VALIANT_COST = 25 * (10 ** 15);
 
     /*
      * Three different options for minting Valiants (basic, premium, and gold).
@@ -32,17 +38,18 @@ contract ValiantFactory is FactoryERC721, Ownable {
     uint256 SINGLE_VALIANT_OPTION = 0;
     uint256 MULTIPLE_VALIANT_OPTION = 1;
     uint256 LOOTBOX_OPTION = 2;
-    uint256 NUM_VALIANTS_IN_MULTIPLE_VALIANT_OPTION = 4;
+    uint256 NUM_VALIANTS_IN_MULTIPLE_VALIANT_OPTION = 3;
 
-    constructor(address _proxyRegistryAddress, address _nftAddress) {
+    constructor(address _proxyRegistryAddress, address _nftAddress) payable {
         proxyRegistryAddress = _proxyRegistryAddress;
         nftAddress = _nftAddress;
 
-        // fireTransferEvents(address(0), owner());
+        _setupRole(ADMIN_ROLE, owner());
+        _setupRole(RECEIVING_ADDRESS, owner());
     }
 
     function name() override external pure returns (string memory) {
-        return "Valiant8";
+        return "Valiant12";
     }
 
     function symbol() override external pure returns (string memory) {
@@ -69,14 +76,34 @@ contract ValiantFactory is FactoryERC721, Ownable {
         }
     }
 
-    function mint(uint256 _optionId, address _toAddress) override public {
-        // Must be sent from the owner proxy or owner.
-        ProxyRegistry proxyRegistry = ProxyRegistry(proxyRegistryAddress);
-        assert(
-            address(proxyRegistry.proxies(owner())) == _msgSender() ||
-                owner() == _msgSender()
-        );
+    function withdraw(address payable _to, uint _amount, bool _all)
+        public
+        onlyRole(ADMIN_ROLE)
+    {
+        uint total = address(this).balance;
+        require(total >= _amount, "Insufficient funds");
+        require(hasRole(RECEIVING_ADDRESS, _to), "To address is not allowed to receive funds.");
+
+        if (_all) {
+            (bool success, ) = _to.call{value: total}("");
+            require(success, "Failed to send Ether");
+        } else {
+            (bool success, ) = _to.call{value: _amount}("");
+            require(success, "Failed to send Ether");
+        }
+    }
+
+    function mint(uint256 _optionId, address _toAddress) override public payable {
         require(canMint(_optionId));
+        uint cost;
+
+        if (_optionId == SINGLE_VALIANT_OPTION) {
+            cost = SINGLE_VALIANT_COST;
+        } else if (_optionId == MULTIPLE_VALIANT_OPTION) {
+            cost = MULTIPLE_VALIANT_COST;
+        }
+
+        require(msg.value == cost, "Incorrect value sent");
 
         Valiant openSeaValiant = Valiant(nftAddress);
         if (_optionId == SINGLE_VALIANT_OPTION) {

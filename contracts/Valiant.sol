@@ -10,7 +10,7 @@ import "./ERC721Tradable.sol";
  */
 contract Valiant is ERC721Tradable {
     constructor(address _proxyRegistryAddress)
-        ERC721Tradable("Valiant8", "BLT", _proxyRegistryAddress)
+        ERC721Tradable("Valiant12", "BLT", _proxyRegistryAddress)
     {}
 
     function baseTokenURI() override public pure returns (string memory) {

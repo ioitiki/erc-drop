@@ -78,7 +78,7 @@ async function main() {
   );
 
   const result = await factoryContract.methods
-    .tokenURI(100)
+    .tokenURI(1)
     .call({ from: OWNER_ADDRESS });
 
   console.log(result)
